@@ -1,10 +1,6 @@
 package team.phantompanthers.opcode.tele_op.impl;
 
-import android.service.controls.Control;
-
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import team.phantompanthers.opcode.tele_op.BaseTeleOpCode;
 import team.phantompanthers.hardware.DriveTrain;
@@ -16,16 +12,14 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
 
     @Override
     public void runOpMode() {
-        // Initializations
         initAprilTag();
         drive.init(hardwareMap);
 
         waitForStart();
         while (opModeIsActive()) {
-            // Go to ControlMapping.java for Controls (Cubic for easier control)
             double x = ControlMappings.MOVEMENT_X.getFloatCubic(gamepad1);
             double y = -ControlMappings.MOVEMENT_Y.getFloatCubic(gamepad1);
-            double rot = (double) ControlMappings.TURN_RIGHT.getFloatCubic(gamepad1) - (double) ControlMappings.TURN_LEFT.getFloatCubic(gamepad1);
+            double rot = ControlMappings.TURN_RIGHT.getFloatCubic(gamepad1) - ControlMappings.TURN_LEFT.getFloatCubic(gamepad1);
 
             drive.drive(x, y, rot);
 

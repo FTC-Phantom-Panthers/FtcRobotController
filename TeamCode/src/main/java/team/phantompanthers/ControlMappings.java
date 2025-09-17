@@ -69,6 +69,6 @@ public enum ControlMappings {
     }
 
     public float getFloatCubic(Gamepad gamepad) {
-        return getFloat(gamepad) * getFloat(gamepad) * getFloat(gamepad);
+        return (float) Math.pow(getFloat(gamepad), 3);
     }
 }

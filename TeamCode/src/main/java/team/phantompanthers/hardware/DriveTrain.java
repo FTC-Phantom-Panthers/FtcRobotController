@@ -9,10 +9,10 @@ public class DriveTrain {
     public DcMotorEx lf, rf, lb, rb;
 
     public void init(HardwareMap hw) {
-        lf = hw.get(DcMotorEx.class, "leftFront");
-        rf = hw.get(DcMotorEx.class, "rightFront");
-        lb = hw.get(DcMotorEx.class, "leftBack");
-        rb = hw.get(DcMotorEx.class, "rightBack");
+        lf = hw.get(DcMotorEx.class, "topLeft");
+        rf = hw.get(DcMotorEx.class, "topRight");
+        lb = hw.get(DcMotorEx.class, "backLeft");
+        rb = hw.get(DcMotorEx.class, "backRight");
 
         // Initial directions so +Y and +X correlate correctly
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
