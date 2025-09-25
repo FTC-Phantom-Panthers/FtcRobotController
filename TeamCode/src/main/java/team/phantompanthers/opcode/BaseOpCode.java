@@ -11,6 +11,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
+import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
+import org.firstinspires.ftc.vision.apriltag.AprilTagMetadata;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
@@ -31,8 +33,9 @@ public abstract class BaseOpCode extends LinearOpMode {
                 .setDrawCubeProjection(false)
                 .setDrawTagOutline(true)
                 .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
-                .setTagLibrary(AprilTagGameDatabase.getCenterStageTagLibrary())
+                .setTagLibrary(getDecodeTagLibrary())
                 .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
+
 
                 // == CAMERA CALIBRATION ==
                 // If you do not manually specify calibration parameters, the SDK will attempt
@@ -79,6 +82,16 @@ public abstract class BaseOpCode extends LinearOpMode {
 
         // Disable or re-enable the aprilTag processor at any time.
         visionPortal.setProcessorEnabled(aprilTag, true);
+    }
+
+    // Set up the AprilTag system to use DECODE defaults
+    protected AprilTagLibrary getDecodeTagLibrary() {
+        AprilTagLibrary.Builder b = new AprilTagLibrary.Builder();
+
+        b.addTag(new AprilTagMetadata(20, "BLUE_GOAL", 8.125, DistanceUnit.INCH));
+        b.addTag(new AprilTagMetadata(24, "RED_GOAL",  8.125, DistanceUnit.INCH));
+
+        return b.build();
     }
 
     /**
