@@ -1,8 +1,12 @@
 package team.phantompanthers.opcode;
 
+import android.graphics.Color;
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -14,17 +18,42 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
 import org.firstinspires.ftc.vision.apriltag.AprilTagMetadata;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.vision.opencv.ImageRegion;
+import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 
 import java.util.List;
 
 public abstract class BaseOpCode extends LinearOpMode {
     protected AprilTagProcessor aprilTag;
     protected VisionPortal visionPortal;
+    protected PredominantColorProcessor colorSensor;
+
+    protected void initColorSensor() {
+        colorSensor = new PredominantColorProcessor.Builder()
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.1, 0.1, 0.1, -0.1))
+                .setSwatches(
+                        PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
+                        PredominantColorProcessor.Swatch.ARTIFACT_PURPLE,
+                        PredominantColorProcessor.Swatch.RED,
+                        PredominantColorProcessor.Swatch.BLUE,
+                        PredominantColorProcessor.Swatch.YELLOW,
+                        PredominantColorProcessor.Swatch.BLACK,
+                        PredominantColorProcessor.Swatch.WHITE)
+                .build();
+    }
+
+    protected void telemetryColorSensor() {
+        PredominantColorProcessor.Result result = colorSensor.getAnalysis();
+
+        telemetry.addLine(String.format("RGB   (%3d, %3d, %3d)",
+                result.RGB[0], result.RGB[1], result.RGB[2]));
+        telemetry.addLine("Closest color swatch: " + result.closestSwatch.name());
+    }
 
     /**
      * Initialize the AprilTag processor.
      */
-    protected void initAprilTag() {
+    protected void initAprilTag(boolean addColorSensor) {
         // Create the AprilTag processor.
         aprilTag = new AprilTagProcessor.Builder()
 
@@ -76,6 +105,9 @@ public abstract class BaseOpCode extends LinearOpMode {
 
         // Set and enable the processor.
         builder.addProcessor(aprilTag);
+
+        if (addColorSensor)
+            builder.addProcessor(colorSensor);
 
         // Build the Vision Portal, using the above settings.
         visionPortal = builder.build();

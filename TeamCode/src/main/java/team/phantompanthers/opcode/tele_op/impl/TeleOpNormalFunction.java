@@ -12,7 +12,8 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
 
     @Override
     public void runOpMode() {
-        initAprilTag();
+        initColorSensor();
+        initAprilTag(true);
         drive.init(hardwareMap);
 
         waitForStart();
@@ -24,6 +25,8 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
             drive.drive(x, y, rot);
 
             telemetryAprilTag();
+            telemetryColorSensor();
+
             telemetry.update();
 
             // Paces loop to 50 Hz so LinearOpMode yields to the CPU and avoids stuttering
