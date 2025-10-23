@@ -2,6 +2,7 @@ package team.phantompanthers.opcode.tele_op.impl;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import team.phantompanthers.hardware.PowerScaler;
 import team.phantompanthers.opcode.tele_op.BaseTeleOpCode;
 import team.phantompanthers.hardware.DriveTrain;
 import team.phantompanthers.ControlMappings;
@@ -15,6 +16,8 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
         initColorSensor();
         initAprilTag(true);
         drive.init(hardwareMap);
+
+        PowerScaler powerScaler = new PowerScaler(hardwareMap.voltageSensor.iterator().next());
 
         waitForStart();
         while (opModeIsActive()) {
