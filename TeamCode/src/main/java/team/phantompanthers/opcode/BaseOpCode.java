@@ -49,7 +49,7 @@ public abstract class BaseOpCode extends LinearOpMode {
     protected void telemetryColorSensor() {
         PredominantColorProcessor.Result result = colorSensor.getAnalysis();
 
-        telemetry.addLine(String.format("RGB   (%3d, %3d, %3d)",
+        telemetry.addLine(String.format(Locale.getDefault(), "RGB   (%3d, %3d, %3d)",
                 result.RGB[0], result.RGB[1], result.RGB[2]));
         telemetry.addLine("Closest color swatch: " + result.closestSwatch.name());
     }
