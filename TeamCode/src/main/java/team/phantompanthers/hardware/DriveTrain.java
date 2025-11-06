@@ -27,18 +27,33 @@ public class DriveTrain {
         }
     }
 
-    public void drive(double x, double y, double rot) {
-        // Usual Mecanum mixing
-        double lfP = y +x + rot;
-        double rfP = y - x - rot;
-        double lbP = y - x + rot;
-        double rbP = y + x - rot;
+    public void drive(double x, double y) {
+        double lfP = Math.min(1, Math.max(-1, -x + y));
+        double rfP = -Math.min(1, Math.max(-1, -x - y));
+        double lbP = -Math.min(1, Math.max(-1, -x - y));
+        double rbP = Math.min(1, Math.max(-1, -x + y));
 
-        // Normalize it so no wheel can be greater than 1
-        double max = Math.max(1.0, Math.max(Math.abs(lfP), Math.max(Math.abs(rfP), Math.max(Math.abs(lbP), Math.abs(rbP)))));
-        lf.setPower(lfP / max);
-        rf.setPower(rfP / max);
-        lb.setPower(lbP / max);
-        rb.setPower(rbP / max);
+        lf.setPower(lfP);
+        rf.setPower(rfP);
+        lb.setPower(lbP);
+        rb.setPower(rbP);
+    }
+
+    public void driveTurnLeft(double power) {
+        if (power > 0) {
+            lf.setPower(power);
+            rf.setPower(-power);
+            lb.setPower(power);
+            rb.setPower(-power);
+        }
+    }
+
+    public void driveTurnRight(double power) {
+        if (power > 0) {
+            lf.setPower(-power);
+            rf.setPower(power);
+            lb.setPower(-power);
+            rb.setPower(power);
+        }
     }
 }
