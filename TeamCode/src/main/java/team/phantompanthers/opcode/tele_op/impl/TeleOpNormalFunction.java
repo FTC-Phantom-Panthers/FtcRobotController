@@ -14,7 +14,7 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
     @Override
     public void runOpMode() {
         initColorSensor();
-        initAprilTag(true);
+        initVisionProcessors();
         drive.init(hardwareMap);
 
         PowerScaler powerScaler = new PowerScaler(hardwareMap.voltageSensor.iterator().next());
@@ -25,10 +25,10 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
             double y = -ControlMappings.MOVEMENT_Y.getFloatCubic(gamepad1);
             double rot = ControlMappings.TURN_RIGHT.getFloatCubic(gamepad1) - ControlMappings.TURN_LEFT.getFloatCubic(gamepad1);
 
-            drive.drive(x, y, rot);
+            drive.drive(powerScaler.scalePower(x), powerScaler.scalePower(y), powerScaler.scalePower(rot));
 
-            telemetryAprilTag();
-            telemetryColorSensor();
+            debugAprilTag();
+            debugColorSensor();
 
             telemetry.update();
 
