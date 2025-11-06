@@ -1,26 +1,19 @@
 package team.phantompanthers.opcode;
 
-import android.graphics.Color;
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-import com.qualcomm.robotcore.hardware.SwitchableLight;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
 import org.firstinspires.ftc.vision.apriltag.AprilTagMetadata;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
-import org.opencv.core.Point;
 
 import java.util.List;
 import java.util.Locale;
@@ -163,7 +156,7 @@ public abstract class BaseOpCode extends LinearOpMode {
                 double area = Math.abs((x1 * y2 + x2 * y3 + x3 * y4 + x4 * y1)
                         - (y1 * x2 + y2 * x3 + y3 * x4 + y4 * x1)) / 2.0;
 
-                double viewArea = WEBCAM_RESOLUTION.getWidth() * WEBCAM_RESOLUTION.getHeight();
+                int viewArea = WEBCAM_RESOLUTION.getWidth() * WEBCAM_RESOLUTION.getHeight();
 
                 // what percent of the view the april tag is taking
                 double viewPercentage = area / viewArea;
