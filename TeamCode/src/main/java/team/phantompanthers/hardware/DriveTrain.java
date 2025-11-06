@@ -14,13 +14,11 @@ public class DriveTrain {
         lb = hw.get(DcMotorEx.class, "backLeft");
         rb = hw.get(DcMotorEx.class, "backRight");
 
-        // Initial directions so +Y and +X correlate correctly
-        lf.setDirection(DcMotorSimple.Direction.REVERSE);
-        lb.setDirection(DcMotor.Direction.REVERSE);
-        rf.setDirection(DcMotor.Direction.FORWARD);
+        lf.setDirection(DcMotor.Direction.FORWARD);
+        lb.setDirection(DcMotor.Direction.FORWARD);
+        rf.setDirection(DcMotor.Direction.REVERSE);
         rb.setDirection(DcMotor.Direction.FORWARD);
 
-        // Brake when no input, run open-loop in TeleOp
         for (DcMotorEx m : new DcMotorEx[]{lf, rf, lb, rb}) {
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
