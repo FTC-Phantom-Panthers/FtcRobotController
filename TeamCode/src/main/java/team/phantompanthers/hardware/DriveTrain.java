@@ -31,27 +31,15 @@ public class DriveTrain {
         }
     }
 
-    public void intake(boolean intake_button, double power){
-        if(intake_button){
-            intake_sys.setPower(power);
-        } else{
-            intake_sys.setPower(0);
-        }
+    public void intake(double power){
+        intake_sys.setPower(power);
     }
 
-    public void launcher_kick(boolean launch_button, double power){
-        if(launch_button){
-            launcher_kick.setPower(power);
-        } else{
-            launcher_kick.setPower(0);
-        }
+    public void launcher_kick(double power){
+        launcher_kick.setPower(power);
     }
-    public void launcher_spin(boolean spin_button, double power){
-        if(spin_button){
-            launcher_wheel.setPower(power);
-        } else{
-            launcher_wheel.setPower(0);
-        }
+    public void launcher_spin(double power){
+        launcher_wheel.setPower(power);
     }
 
     public void drive(double x, double y, double rot) {
