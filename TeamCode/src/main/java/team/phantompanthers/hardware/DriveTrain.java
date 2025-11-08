@@ -63,7 +63,7 @@ public class DriveTrain {
 
         // Normalize it so no wheel can be greater than 1
         double max = Math.max(1.0, Math.max(Math.abs(lfP), Math.max(Math.abs(rfP), Math.max(Math.abs(lbP), Math.abs(rbP)))));
-        lf.setPower(lfP / max);
+        lf.setPower(-(lfP / max));
         rf.setPower(rfP / max);
         lb.setPower(lbP / max);
         rb.setPower(rbP / max);
