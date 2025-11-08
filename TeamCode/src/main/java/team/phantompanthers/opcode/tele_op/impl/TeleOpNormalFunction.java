@@ -23,7 +23,7 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
         while (opModeIsActive()) {
             double x = ControlMappings.MOVEMENT_X.getFloatCubic(gamepad1);
             double y = -ControlMappings.MOVEMENT_Y.getFloatCubic(gamepad1);
-            double rotationLeft = ControlMappings.TURN_RIGHT.getFloatCubic(gamepad1);
+            double rotationLeft = ControlMappings.TURN_LEFT.getFloatCubic(gamepad1);
             double rotationRight = ControlMappings.TURN_RIGHT.getFloatCubic(gamepad1);
 
             drive.drive(x, y);
