@@ -47,7 +47,7 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
                 drive.launcher_spin(1);
             }
             if(ControlMappings.SPIN_INVERT.getBoolean(gamepad1)){
-                drive.launcher_spin(1);
+                drive.launcher_spin(-1);
             }
             if (!ControlMappings.SPIN.getBoolean(gamepad1) && !ControlMappings.SPIN_INVERT.getBoolean(gamepad1)) {
                 drive.launcher_spin(0);
