@@ -23,12 +23,17 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 
 import java.util.List;
 
-public abstract class BaseOpCode extends LinearOpMode {
-    protected AprilTagProcessor aprilTag;
-    protected VisionPortal visionPortal;
-    protected PredominantColorProcessor colorSensor;
 
-    protected void initColorSensor() {
+/**
+ * TODO: Make sure a webcam is configured beforehand
+ * uncomment it after
+ */
+public abstract class BaseOpCode extends LinearOpMode {
+    // protected AprilTagProcessor aprilTag;
+    // protected VisionPortal visionPortal;
+    // protected PredominantColorProcessor colorSensor;
+
+    /** protected void initColorSensor() {
         colorSensor = new PredominantColorProcessor.Builder()
                 .setRoi(ImageRegion.asUnityCenterCoordinates(-0.1, 0.1, 0.1, -0.1))
                 .setSwatches(
@@ -40,19 +45,21 @@ public abstract class BaseOpCode extends LinearOpMode {
                         PredominantColorProcessor.Swatch.BLACK,
                         PredominantColorProcessor.Swatch.WHITE)
                 .build();
-    }
+    } **/
 
-    protected void telemetryColorSensor() {
+    /** protected void telemetryColorSensor() {
         PredominantColorProcessor.Result result = colorSensor.getAnalysis();
 
         telemetry.addLine(String.format("RGB   (%3d, %3d, %3d)",
                 result.RGB[0], result.RGB[1], result.RGB[2]));
         telemetry.addLine("Closest color swatch: " + result.closestSwatch.name());
-    }
+    } **/
 
     /**
      * Initialize the AprilTag processor.
      */
+
+    /**
     protected void initAprilTag(boolean addColorSensor) {
         // Create the AprilTag processor.
         aprilTag = new AprilTagProcessor.Builder()
@@ -87,8 +94,6 @@ public abstract class BaseOpCode extends LinearOpMode {
         VisionPortal.Builder builder = new VisionPortal.Builder();
 
         // Set the camera (webcam vs. built-in RC phone camera).
-        builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
-
         // Choose a camera resolution. Not all cameras support all resolutions.
         builder.setCameraResolution(new Size(640, 480));
 
@@ -125,10 +130,12 @@ public abstract class BaseOpCode extends LinearOpMode {
 
         return b.build();
     }
-
+**/
     /**
      * Add telemetry about AprilTag detections.
      */
+
+    /**
     protected void telemetryAprilTag() {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telemetry.addData("# AprilTags Detected", currentDetections.size());
@@ -151,4 +158,5 @@ public abstract class BaseOpCode extends LinearOpMode {
         telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
         telemetry.addLine("RBE = Range, Bearing & Elevation");
     }
+     **/
 }

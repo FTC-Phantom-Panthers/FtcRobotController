@@ -8,7 +8,14 @@ public enum ControlMappings {
     MOVEMENT_X("left_stick_x"),
     MOVEMENT_Y("left_stick_y"),
     TURN_LEFT("left_trigger"),
-    TURN_RIGHT("right_trigger");
+    TURN_RIGHT("right_trigger"),
+    INTAKE("x"),
+    INTAKE_INVERT("y"),
+    KICK("dpad_down"),
+    KICK_INVERT("dpad_up"),
+    SPIN("right_bumper"),
+    SPIN_INVERT("left_bumper");
+
 
     public final String fieldName;
     private final Function<Object, Object> valueModifier;

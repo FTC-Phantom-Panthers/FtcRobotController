@@ -13,11 +13,9 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
 
     @Override
     public void runOpMode() {
-        initColorSensor();
-        initAprilTag(true);
         drive.init(hardwareMap);
-
-        PowerScaler powerScaler = new PowerScaler(hardwareMap.voltageSensor.iterator().next());
+        Double power;
+        // PowerScaler powerScaler = new PowerScaler(hardwareMap.voltageSensor.iterator().next());
 
         waitForStart();
         while (opModeIsActive()) {
@@ -25,10 +23,33 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
             double y = -ControlMappings.MOVEMENT_Y.getFloatCubic(gamepad1);
             double rot = ControlMappings.TURN_RIGHT.getFloatCubic(gamepad1) - ControlMappings.TURN_LEFT.getFloatCubic(gamepad1);
 
-            drive.drive(x, y, rot);
 
-            telemetryAprilTag();
-            telemetryColorSensor();
+            if(ControlMappings.KICK.getBoolean(gamepad1)){
+                power = 1.0;
+                drive.launcher_kick(ControlMappings.KICK.getBoolean(gamepad1),power);
+            } else if(ControlMappings.KICK_INVERT.getBoolean(gamepad1)){
+                power = -1.0;
+                drive.launcher_kick(ControlMappings.KICK_INVERT.getBoolean(gamepad1),power);
+            } else{
+                drive.launcher_kick(false,0);
+            }
+            if(ControlMappings.INTAKE.getBoolean(gamepad1)){
+                power = 1.0;
+                drive.intake(ControlMappings.INTAKE.getBoolean(gamepad1),power);
+            } else if(ControlMappings.INTAKE_INVERT.getBoolean(gamepad1)){
+                power = -1.0;
+                drive.intake(ControlMappings.INTAKE_INVERT.getBoolean(gamepad1),power);
+            } else {
+                drive.intake(false, 0);
+            }
+            if(ControlMappings.SPIN.getBoolean(gamepad1)){
+                power = 1.0;
+                drive.launcher_spin(ControlMappings.SPIN.getBoolean(gamepad1),power);
+            } else if(ControlMappings.SPIN_INVERT.getBoolean(gamepad1)){
+                power = -1.0;
+                drive.launcher_spin(ControlMappings.SPIN_INVERT.getBoolean(gamepad1),power);
+            }
+            drive.drive(x, y, rot);
 
             telemetry.update();
 
@@ -36,6 +57,6 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
             sleep(20);
         }
 
-        visionPortal.close();
+        // visionPortal.close();
     }
 }
