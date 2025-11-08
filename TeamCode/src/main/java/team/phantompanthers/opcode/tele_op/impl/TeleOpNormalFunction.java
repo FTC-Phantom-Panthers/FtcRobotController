@@ -53,7 +53,6 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
 
             telemetry.update();
 
-            // Paces loop to 50 Hz so LinearOpMode yields to the CPU and avoids stuttering
             sleep(20);
         }
 
