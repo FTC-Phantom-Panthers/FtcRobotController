@@ -27,21 +27,27 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
             if(ControlMappings.KICK.getBoolean(gamepad1)){
                 power = 1.0;
                 drive.launcher_kick(ControlMappings.KICK.getBoolean(gamepad1),power);
-            } else if(ControlMappings.KICK_INVERT.getBoolean(gamepad1)){
+            }
+            if(ControlMappings.KICK_INVERT.getBoolean(gamepad1)){
                 power = -1.0;
                 drive.launcher_kick(ControlMappings.KICK_INVERT.getBoolean(gamepad1),power);
-            } else{
+            }
+            if (!ControlMappings.KICK.getBoolean(gamepad1) && !ControlMappings.KICK_INVERT.getBoolean(gamepad1)) {
                 drive.launcher_kick(false,0);
             }
+
             if(ControlMappings.INTAKE.getBoolean(gamepad1)){
                 power = 1.0;
                 drive.intake(ControlMappings.INTAKE.getBoolean(gamepad1),power);
-            } else if(ControlMappings.INTAKE_INVERT.getBoolean(gamepad1)){
+            }
+            if(ControlMappings.INTAKE_INVERT.getBoolean(gamepad1)){
                 power = -1.0;
                 drive.intake(ControlMappings.INTAKE_INVERT.getBoolean(gamepad1),power);
-            } else {
+            }
+            if (!ControlMappings.INTAKE.getBoolean(gamepad1) && !ControlMappings.INTAKE_INVERT.getBoolean(gamepad1)) {
                 drive.intake(false, 0);
             }
+
             if(ControlMappings.SPIN.getBoolean(gamepad1)){
                 power = 1.0;
                 drive.launcher_spin(ControlMappings.SPIN.getBoolean(gamepad1),power);
