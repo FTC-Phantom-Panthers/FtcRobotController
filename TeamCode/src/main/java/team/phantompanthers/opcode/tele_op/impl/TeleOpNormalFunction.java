@@ -14,44 +14,18 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
     @Override
     public void runOpMode() {
         drive.init(hardwareMap);
-        // PowerScaler powerScaler = new PowerScaler(hardwareMap.voltageSensor.iterator().next());
+        PowerScaler powerScaler = new PowerScaler(hardwareMap.voltageSensor.iterator().next());
 
+        initVisionProcessors();
         waitForStart();
         while (opModeIsActive()) {
             double x = ControlMappings.MOVEMENT_X.getFloatCubic(gamepad1);
             double y = -ControlMappings.MOVEMENT_Y.getFloatCubic(gamepad1);
-            double rot = ControlMappings.TURN_RIGHT.getFloatCubic(gamepad1) - ControlMappings.TURN_LEFT.getFloatCubic(gamepad1);
+            double rot = ControlMappings.ROTATION.get(Float.class, gamepad1);
 
-
-            if(ControlMappings.KICK.getBoolean(gamepad1)){
-                drive.launcher_kick(1);
-            }
-            if(ControlMappings.KICK_INVERT.getBoolean(gamepad1)){
-                drive.launcher_kick(-1);
-            }
-            if (!ControlMappings.KICK.getBoolean(gamepad1) && !ControlMappings.KICK_INVERT.getBoolean(gamepad1)) {
-                drive.launcher_kick(0);
-            }
-
-            if(ControlMappings.INTAKE.getBoolean(gamepad1)){
-                drive.intake(1);
-            }
-            if(ControlMappings.INTAKE_INVERT.getBoolean(gamepad1)){
-                drive.intake(-1);
-            }
-            if (!ControlMappings.INTAKE.getBoolean(gamepad1) && !ControlMappings.INTAKE_INVERT.getBoolean(gamepad1)) {
-                drive.intake(0);
-            }
-
-            if(ControlMappings.SPIN.getBoolean(gamepad1)){
-                drive.launcher_spin(1);
-            }
-            if(ControlMappings.SPIN_INVERT.getBoolean(gamepad1)){
-                drive.launcher_spin(-1);
-            }
-            if (!ControlMappings.SPIN.getBoolean(gamepad1) && !ControlMappings.SPIN_INVERT.getBoolean(gamepad1)) {
-                drive.launcher_spin(0);
-            }
+            drive.launcher_kick(ControlMappings.KICK.get(Float.class, gamepad1));
+            drive.intake(ControlMappings.INTAKE.get(Float.class, gamepad1));
+            drive.launcher_spin(ControlMappings.SPIN.get(Float.class, gamepad1));
 
             drive.drive(x, y, rot);
 
@@ -60,6 +34,6 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
             sleep(20);
         }
 
-        // visionPortal.close();
+        visionPortal.close();
     }
 }
