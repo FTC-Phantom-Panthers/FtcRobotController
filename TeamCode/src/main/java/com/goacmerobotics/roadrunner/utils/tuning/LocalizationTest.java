@@ -11,7 +11,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.goacmerobotics.roadrunner.utils.Drawing;
 import com.goacmerobotics.roadrunner.utils.MecanumDrive;
 import com.goacmerobotics.roadrunner.utils.TankDrive;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+@TeleOp(name = "Localization Test", group = "Linear Opmode")
 public class LocalizationTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
