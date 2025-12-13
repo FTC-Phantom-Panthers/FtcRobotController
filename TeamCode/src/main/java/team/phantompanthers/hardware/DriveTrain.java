@@ -6,17 +6,16 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class DriveTrain {
-    public DcMotorEx lf, rf, lb, rb, intake_sys, launcher_kick, launcher_wheel;
+    public DcMotorEx lf, rf, lb, rb, intake, wheel;
 
     public void init(HardwareMap hw) {
         lf = hw.get(DcMotorEx.class, "topLeft");
         rf = hw.get(DcMotorEx.class, "topRight");
         lb = hw.get(DcMotorEx.class, "backLeft");
         rb = hw.get(DcMotorEx.class, "backRight");
-        launcher_kick = hw.get(DcMotorEx.class, "launcher_kick");
-        launcher_wheel = hw.get(DcMotorEx.class,"launcher_wheel");
+        wheel = hw.get(DcMotorEx.class,"wheel");
 
-        intake_sys = hw.get(DcMotorEx.class, "intakeSys");
+        intake = hw.get(DcMotorEx.class, "intake");
 
         // Initial directions so +Y and +X correlate correctly
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -32,14 +31,10 @@ public class DriveTrain {
     }
 
     public void intake(double power){
-        intake_sys.setPower(power);
+        intake.setPower(power);
     }
-
-    public void launcher_kick(double power){
-        launcher_kick.setPower(power);
-    }
-    public void launcher_spin(double power){
-        launcher_wheel.setPower(power);
+    public void wheelSpin(double power){
+        wheel.setPower(power);
     }
 
     public void drive(double x, double y, double rot) {

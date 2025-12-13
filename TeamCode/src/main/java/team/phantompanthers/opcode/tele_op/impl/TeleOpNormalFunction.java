@@ -16,16 +16,15 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
         drive.init(hardwareMap);
         PowerScaler powerScaler = new PowerScaler(hardwareMap.voltageSensor.iterator().next());
 
-        initVisionProcessors();
+        //initVisionProcessors();
         waitForStart();
         while (opModeIsActive()) {
             double x = ControlMappings.MOVEMENT_X.getFloatCubic(gamepad1);
             double y = -ControlMappings.MOVEMENT_Y.getFloatCubic(gamepad1);
             double rot = ControlMappings.ROTATION.get(Float.class, gamepad1);
 
-            drive.launcher_kick(ControlMappings.KICK.get(Float.class, gamepad1));
             drive.intake(ControlMappings.INTAKE.get(Float.class, gamepad1));
-            drive.launcher_spin(ControlMappings.SPIN.get(Float.class, gamepad1));
+            drive.wheelSpin(ControlMappings.WHEEL_SPIN.get(Float.class, gamepad1));
 
             drive.drive(x, y, rot);
 

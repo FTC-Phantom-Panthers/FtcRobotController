@@ -9,6 +9,13 @@ public enum ControlMappings {
     MOVEMENT_Y((g) -> g.left_stick_y),
     ROTATION((g) -> g.right_trigger - g.left_trigger),
     INTAKE((g) -> {
+        if (g.right_bumper && g.left_bumper)
+            return 0;
+        if (g.right_bumper)
+            return 1;
+        if (g.left_bumper)
+            return -1;
+
         if (g.x && g.y)
             return 0;
         if (g.x)
@@ -18,23 +25,13 @@ public enum ControlMappings {
 
         return 0;
     }),
-    KICK((g) -> {
-        if (g.dpad_up && g.dpad_down)
-            return 0;
-        if (g.dpad_up)
-            return 1;
-        if (g.dpad_down)
-            return -1;
-
-        return 0;
-    }),
-    SPIN((g) -> {
+    WHEEL_SPIN((g) -> {
         if (g.right_bumper && g.left_bumper)
             return 0;
         if (g.right_bumper)
-            return 1;
+            return .4;
         if (g.left_bumper)
-            return -1;
+            return -.4;
 
         return 0;
     });
@@ -45,13 +42,29 @@ public enum ControlMappings {
         this.valueProvider = valueProvider;
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> T convertNumber(Number value, Class<T> target) {
+        if (target == Byte.class)    return (T) Byte.valueOf(value.byteValue());
+        if (target == Short.class)   return (T) Short.valueOf(value.shortValue());
+        if (target == Integer.class) return (T) Integer.valueOf(value.intValue());
+        if (target == Long.class)    return (T) Long.valueOf(value.longValue());
+        if (target == Float.class)   return (T) Float.valueOf(value.floatValue());
+        if (target == Double.class)  return (T) Double.valueOf(value.doubleValue());
+
+        throw new IllegalArgumentException("Unsupported number type: " + target);
+    }
+
     public <T> T get(Class<T> clazz, Gamepad gamepad) {
         Object rawValue = valueProvider.apply(gamepad);
+
+        if (rawValue instanceof Number && Number.class.isAssignableFrom(clazz)) {
+            return convertNumber((Number) rawValue, clazz);
+        }
 
         return clazz.cast(rawValue);
     }
 
     public float getFloatCubic(Gamepad gamepad) {
-        return (float) Math.pow(get(Double.class, gamepad), 3);
+        return (float) Math.pow(get(Float.class, gamepad), 3);
     }
 }
