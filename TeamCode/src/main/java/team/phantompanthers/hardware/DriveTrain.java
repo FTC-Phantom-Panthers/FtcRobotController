@@ -1,19 +1,25 @@
 package team.phantompanthers.hardware;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class DriveTrain {
-    public DcMotorEx lf, rf, lb, rb, intake, wheel;
-
+    public DcMotorEx lf, rf, lb, rb, intake, wheel, launcher;
+    public Servo launcherKick;
+    public ColorSensor colorSensor;
     public void init(HardwareMap hw) {
         lf = hw.get(DcMotorEx.class, "topLeft");
         rf = hw.get(DcMotorEx.class, "topRight");
         lb = hw.get(DcMotorEx.class, "backLeft");
         rb = hw.get(DcMotorEx.class, "backRight");
         wheel = hw.get(DcMotorEx.class,"wheel");
+        launcher = hw.get(DcMotorEx.class, "launcher");
+        launcherKick = hw.get(Servo.class, "launcherKick");
+        colorSensor = hw.get(ColorSensor.class, "colorSensor");
 
         intake = hw.get(DcMotorEx.class, "intake");
 
@@ -28,13 +34,23 @@ public class DriveTrain {
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
+
+        //launcherKick.setPosition(-0.5);
     }
 
     public void intake(double power){
         intake.setPower(power);
     }
-    public void wheelSpin(double power){
+    public void wheelSpin(double power) {
         wheel.setPower(power);
+    }
+
+    public void launcherSpin(double power) {
+        launcher.setPower(power);
+    }
+
+    public void launcherKick(double position) {
+        launcherKick.setPosition(position);
     }
 
     public void drive(double x, double y, double rot) {

@@ -34,7 +34,17 @@ public enum ControlMappings {
             return -.4;
 
         return 0;
-    });
+    }),
+    LAUNCHER_SPIN((g) -> {
+        if (g.b)
+            return 1;
+
+        return 0;
+    }),
+    SPIN_TO_PURPLE((g) -> g.dpad_up),
+    SPIN_TO_GREEN((g) -> g.dpad_down),
+    FIND_CANCEL((g) -> g.dpad_left),
+    LAUNCH((g) -> g.a);
 
     private final Function<Gamepad, Object> valueProvider;
 
