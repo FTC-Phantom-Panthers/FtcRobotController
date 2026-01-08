@@ -4,6 +4,7 @@ import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.Supplier;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Function;
 
 public abstract class BaseOpCode extends LinearOpMode {
     protected static final Size WEBCAM_RESOLUTION = new Size(640, 480);
@@ -122,5 +124,21 @@ public abstract class BaseOpCode extends LinearOpMode {
         telemetry.addLine(String.format(Locale.getDefault(), "RGB   (%3d, %3d, %3d)",
                 result.RGB[0], result.RGB[1], result.RGB[2]));
         telemetry.addLine("Closest color swatch: " + result.closestSwatch.name());
+    }
+
+    protected enum BallToFind {
+        NONE((hue) -> false),
+        GREEN((hue) -> hue > 100 && hue < 200),
+        PURPLE((hue) -> hue >= 200);
+
+        private final Function<Float, Boolean> condition;
+
+        BallToFind(Function<Float, Boolean> condition) {
+            this.condition = condition;
+        }
+
+        public boolean isHueCorrect(float hue) {
+            return condition.apply(hue);
+        }
     }
 }

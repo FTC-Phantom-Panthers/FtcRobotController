@@ -16,11 +16,11 @@ public enum ControlMappings {
         if (g.left_bumper)
             return -1;
 
-        if (g.x && g.y)
+        if (g.dpad_left && g.dpad_right)
             return 0;
-        if (g.x)
+        if (g.dpad_right)
             return 1;
-        if (g.y)
+        if (g.dpad_left)
             return -1;
 
         return 0;
@@ -33,18 +33,26 @@ public enum ControlMappings {
         if (g.left_bumper)
             return -.4;
 
+
+        if (g.back && g.start)
+            return 0;
+        if (g.start)
+            return 1;
+        if (g.back)
+            return -1;
+
         return 0;
     }),
     LAUNCHER_SPIN((g) -> {
-        if (g.b)
+        if (g.y)
             return 1;
 
         return 0;
     }),
-    SPIN_TO_PURPLE((g) -> g.dpad_up),
-    SPIN_TO_GREEN((g) -> g.dpad_down),
-    FIND_CANCEL((g) -> g.dpad_left),
-    LAUNCH((g) -> g.a);
+    SPIN_TO_PURPLE(Gamepad::bWasPressed),
+    SPIN_TO_GREEN(Gamepad::aWasPressed),
+    FIND_CANCEL(Gamepad::xWasPressed),
+    LAUNCH(Gamepad::dpadUpWasPressed);
 
     private final Function<Gamepad, Object> valueProvider;
 
