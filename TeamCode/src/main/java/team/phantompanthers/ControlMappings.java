@@ -33,14 +33,6 @@ public enum ControlMappings {
         if (g.left_bumper)
             return -.4;
 
-
-        if (g.back && g.start)
-            return 0;
-        if (g.start)
-            return 1;
-        if (g.back)
-            return -1;
-
         return 0;
     }),
     LAUNCHER_SPIN((g) -> {

@@ -14,7 +14,7 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
     private static final int BALL_FIND_TIMEOUT_MS = 5000;
     private static final int KICK_STAY_TIME_MS = 1000;
 
-    private static final int SPIN_STAY_TIME_MS = 50;
+    private static final int SPIN_STAY_TIME_MS = 30;
 
     private final DriveTrain drive = new DriveTrain();
     private boolean lastKickValue = false;
