@@ -37,7 +37,7 @@ public enum ControlMappings {
     }),
     LAUNCHER_SPIN((g) -> {
         if (g.y)
-            return 1;
+            return -1;
 
         return 0;
     }),
