@@ -5,11 +5,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 public class DriveTrain {
+    public static final int MAX_SORTER_POSITIONS = 3;
+    public static final int SORTER_MAX_TICKS_PER_REVOLUTION = 288;
+
+    public static final int SORTER_OFFSET = 40;
+
     public DcMotorEx lf, rf, lb, rb, intake, wheel, launcher;
-    public Servo launcherKick;
+    public DcMotorEx elevator;
     public ColorSensor colorSensor;
     public void init(HardwareMap hw) {
         lf = hw.get(DcMotorEx.class, "topLeft");
@@ -18,7 +22,7 @@ public class DriveTrain {
         rb = hw.get(DcMotorEx.class, "backRight");
         wheel = hw.get(DcMotorEx.class,"wheel");
         launcher = hw.get(DcMotorEx.class, "launcher");
-        launcherKick = hw.get(Servo.class, "launcherKick");
+        elevator = hw.get(DcMotorEx.class, "elevator");
         colorSensor = hw.get(ColorSensor.class, "colorSensor");
 
         intake = hw.get(DcMotorEx.class, "intake");
@@ -35,7 +39,27 @@ public class DriveTrain {
             m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-        //launcherKick.setPosition(-0.5);
+        wheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        wheel.setTargetPosition(0);
+
+        wheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        wheel.setPower(1);
+    }
+
+    public int getWheelPosition() {
+        return wheel.getCurrentPosition();
+    }
+
+    public void wheelRotateTo(int position) {
+        //int _position = Math.min(Math.max(position, 0), MAX_SORTER_POSITIONS);
+
+        wheel.setTargetPosition((position * (SORTER_MAX_TICKS_PER_REVOLUTION / MAX_SORTER_POSITIONS)) + SORTER_OFFSET);
+    }
+
+    public boolean isWheelBusy() {
+        return wheel.isBusy();
     }
 
     public void intake(double power){
@@ -49,8 +73,8 @@ public class DriveTrain {
         launcher.setPower(power);
     }
 
-    public void launcherKick(double position) {
-        launcherKick.setPosition(position);
+    public void launcherKick(double power) {
+        elevator.setPower(power);
     }
 
     public void drive(double x, double y, double rot) {

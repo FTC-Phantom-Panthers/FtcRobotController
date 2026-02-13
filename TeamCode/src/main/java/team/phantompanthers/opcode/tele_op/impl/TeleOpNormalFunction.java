@@ -12,19 +12,19 @@ import team.phantompanthers.ControlMappings;
 @TeleOp(name = "Normal Function", group = "Linear Opmode")
 public class TeleOpNormalFunction extends BaseTeleOpCode {
     private static final int BALL_FIND_TIMEOUT_MS = 5000;
+    private static final int BALL_FIND_CYCLE_TIMEOUT_MS = 500;
     private static final int KICK_STAY_TIME_MS = 1000;
 
-    private static final int SPIN_STAY_TIME_MS = 30;
-
     private final DriveTrain drive = new DriveTrain();
-    private boolean lastKickValue = false;
+
+    private int sorterPosition = 0;
     private boolean kickToggle = false;
     private long kickStartTime = -1;
     private long findColorStartTime = -1;
 
-    private BallToFind ballToFind = BallToFind.NONE;
+    private long findColorCycleTimeoutStartTime = -1;
 
-    private long foundBallTime = -1;
+    private BallToFind ballToFind = BallToFind.NONE;
 
     @Override
     public void runOpMode() {
@@ -41,7 +41,18 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
             drive.drive(x, y, rot);
 
             drive.intake(ControlMappings.INTAKE.get(Float.class, gamepad1));
-            drive.wheelSpin(ControlMappings.WHEEL_SPIN.get(Float.class, gamepad1));
+
+            if (ControlMappings.SORTER_SPIN_CYCLE_UP.get(Boolean.class, gamepad1)) {
+                sorterPosition++;
+            }
+
+            if (ControlMappings.SORTER_SPIN_CYCLE_DOWN.get(Boolean.class, gamepad1)) {
+                sorterPosition--;
+            }
+
+
+            drive.wheelRotateTo(sorterPosition);
+
             drive.launcherSpin(ControlMappings.LAUNCHER_SPIN.get(Float.class, gamepad1));
 
             if (ControlMappings.LAUNCH.get(Boolean.class, gamepad1)) {
@@ -54,52 +65,48 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
                 kickStartTime = -1;
             }
 
-            drive.launcherKick(kickToggle ? 0.4f : 0.7f);
+            drive.launcherKick(kickToggle ? -1 : 0);
+
+            telemetry.addData("Sorter Position", sorterPosition);
+            telemetry.addData("Sorter Real Position", drive.getWheelPosition());
 
             if (ControlMappings.SPIN_TO_PURPLE.get(Boolean.class, gamepad1)) {
                 ballToFind = BallToFind.PURPLE;
                 findColorStartTime = System.currentTimeMillis();
-                foundBallTime = -1;
             } else if (ControlMappings.SPIN_TO_GREEN.get(Boolean.class, gamepad1)) {
                 ballToFind = BallToFind.GREEN;
                 findColorStartTime = System.currentTimeMillis();
-                foundBallTime = -1;
             }
 
             if (ControlMappings.FIND_CANCEL.get(Boolean.class, gamepad1)) {
                 ballToFind = BallToFind.NONE;
                 findColorStartTime = -1;
-                foundBallTime = -1;
             }
 
             if (ballToFind != BallToFind.NONE && System.currentTimeMillis() - findColorStartTime > BALL_FIND_TIMEOUT_MS) {
                 ballToFind = BallToFind.NONE;
                 findColorStartTime = -1;
-                foundBallTime = -1;
                 telemetry.addLine("no " + ballToFind.name().toLowerCase() + " ball found");
             }
 
-            if (ballToFind != BallToFind.NONE) {
-                float[] hsv = new float[3];
-                Color.colorToHSV(drive.colorSensor.argb(), hsv);
+            if (ballToFind != BallToFind.NONE && !drive.isWheelBusy()) {
+                if (findColorCycleTimeoutStartTime == -1)
+                    findColorCycleTimeoutStartTime = System.currentTimeMillis();
 
-                if (ballToFind.isHueCorrect(hsv[0])) {
-                    ballToFind = BallToFind.NONE;
-                    findColorStartTime = -1;
-                    drive.wheelSpin(-0.4f);
-                    drive.intake(0);
-                    foundBallTime = System.currentTimeMillis();
-                } else {
-                    drive.wheelSpin(0.4f);
-                    drive.intake(1);
+                if (System.currentTimeMillis() - findColorCycleTimeoutStartTime > BALL_FIND_CYCLE_TIMEOUT_MS) {
+                    findColorCycleTimeoutStartTime = -1;
+
+                    float[] hsv = new float[3];
+                    Color.colorToHSV(drive.colorSensor.argb(), hsv);
+
+                    if (ballToFind.isHueCorrect(hsv[0])) {
+                        ballToFind = BallToFind.NONE;
+                        findColorStartTime = -1;
+                    } else {
+                        sorterPosition++;
+                    }
                 }
             }
-
-            if (System.currentTimeMillis() - foundBallTime < SPIN_STAY_TIME_MS) {
-                drive.wheelSpin(-0.4f);
-                drive.intake(0);
-            }
-
             hsvTelemetry();
 
             telemetry.update();

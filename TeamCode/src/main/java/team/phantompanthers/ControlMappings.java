@@ -8,36 +8,12 @@ public enum ControlMappings {
     MOVEMENT_X((g) -> g.left_stick_x),
     MOVEMENT_Y((g) -> g.left_stick_y),
     ROTATION((g) -> g.right_trigger - g.left_trigger),
-    INTAKE((g) -> {
-        if (g.right_bumper && g.left_bumper)
-            return 0;
-        if (g.right_bumper)
-            return 1;
-        if (g.left_bumper)
-            return -1;
-
-        if (g.dpad_left && g.dpad_right)
-            return 0;
-        if (g.dpad_right)
-            return 1;
-        if (g.dpad_left)
-            return -1;
-
-        return 0;
-    }),
-    WHEEL_SPIN((g) -> {
-        if (g.right_bumper && g.left_bumper)
-            return 0;
-        if (g.right_bumper)
-            return .4;
-        if (g.left_bumper)
-            return -.4;
-
-        return 0;
-    }),
+    INTAKE((g) -> -g.right_stick_y),
+    SORTER_SPIN_CYCLE_UP(Gamepad::rightBumperWasPressed),
+    SORTER_SPIN_CYCLE_DOWN(Gamepad::leftBumperWasPressed),
     LAUNCHER_SPIN((g) -> {
         if (g.y)
-            return -1;
+            return -0.7f;
 
         return 0;
     }),
