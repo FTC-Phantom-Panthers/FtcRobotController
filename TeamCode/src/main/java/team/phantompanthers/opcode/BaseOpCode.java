@@ -66,57 +66,60 @@ public abstract class BaseOpCode extends LinearOpMode {
 
     // Set up the AprilTag system to use DECODE defaults
     protected AprilTagLibrary getDecodeTagLibrary() {
-        AprilTagLibrary.Builder b = new AprilTagLibrary.Builder();
+//        AprilTagLibrary.Builder b = new AprilTagLibrary.Builder();
+//
+//        b.addTag(new AprilTagMetadata(20, "BLUE_GOAL", 8.125, DistanceUnit.INCH));
+//        b.addTag(new AprilTagMetadata(24, "RED_GOAL",  8.125, DistanceUnit.INCH));
+//
+//        return b.build();
+//    }
+//
+//    protected void debugAprilTag() {
+//        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+//        telemetry.addData("# AprilTags Detected", currentDetections.size());
+//
+//        for (AprilTagDetection detection : currentDetections) {
+//            if (detection.metadata != null) {
+//                telemetry.addLine(String.format(Locale.getDefault(), "\n==== (ID %d) %s", detection.id, detection.metadata.name));
+//                telemetry.addLine(String.format(Locale.getDefault(), "XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
+//                telemetry.addLine(String.format(Locale.getDefault(), "PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
+//                telemetry.addLine(String.format(Locale.getDefault(), "RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
+//            } else {
+//                telemetry.addLine(String.format(Locale.getDefault(), "\n==== (ID %d) Unknown", detection.id));
+//                telemetry.addLine(String.format(Locale.getDefault(), "Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
+//            }
+//
+//            // distance calculation
+//            {
+//                double x1 = detection.corners[0].x;
+//                double x2 = detection.corners[1].x;
+//                double x3 = detection.corners[2].x;
+//                double x4 = detection.corners[3].x;
+//                double y1 = detection.corners[0].y;
+//                double y2 = detection.corners[1].y;
+//                double y3 = detection.corners[2].y;
+//                double y4 = detection.corners[3].y;
+//
+//                double area = Math.abs((x1 * y2 + x2 * y3 + x3 * y4 + x4 * y1)
+//                        - (y1 * x2 + y2 * x3 + y3 * x4 + y4 * x1)) / 2.0;
+//
+//                int viewArea = WEBCAM_RESOLUTION.getWidth() * WEBCAM_RESOLUTION.getHeight();
+//
+//                // what percent of the view the april tag is taking
+//                double viewPercentage = area / viewArea;
+//
+//                telemetry.addLine("View area percent: " + String.format(Locale.getDefault(), "%.2f", viewPercentage) + "%");
+//            }
+//        }
+//
+//        // Add "key" information to telemetry
+//        telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
+//        telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
+//        telemetry.addLine("RBE = Range, Bearing & Elevation");
 
-        b.addTag(new AprilTagMetadata(20, "BLUE_GOAL", 8.125, DistanceUnit.INCH));
-        b.addTag(new AprilTagMetadata(24, "RED_GOAL",  8.125, DistanceUnit.INCH));
-
-        return b.build();
+        return null;
     }
 
-    protected void debugAprilTag() {
-        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
-        telemetry.addData("# AprilTags Detected", currentDetections.size());
-
-        for (AprilTagDetection detection : currentDetections) {
-            if (detection.metadata != null) {
-                telemetry.addLine(String.format(Locale.getDefault(), "\n==== (ID %d) %s", detection.id, detection.metadata.name));
-                telemetry.addLine(String.format(Locale.getDefault(), "XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
-                telemetry.addLine(String.format(Locale.getDefault(), "PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
-                telemetry.addLine(String.format(Locale.getDefault(), "RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
-            } else {
-                telemetry.addLine(String.format(Locale.getDefault(), "\n==== (ID %d) Unknown", detection.id));
-                telemetry.addLine(String.format(Locale.getDefault(), "Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
-            }
-
-            // distance calculation
-            {
-                double x1 = detection.corners[0].x;
-                double x2 = detection.corners[1].x;
-                double x3 = detection.corners[2].x;
-                double x4 = detection.corners[3].x;
-                double y1 = detection.corners[0].y;
-                double y2 = detection.corners[1].y;
-                double y3 = detection.corners[2].y;
-                double y4 = detection.corners[3].y;
-
-                double area = Math.abs((x1 * y2 + x2 * y3 + x3 * y4 + x4 * y1)
-                        - (y1 * x2 + y2 * x3 + y3 * x4 + y4 * x1)) / 2.0;
-
-                int viewArea = WEBCAM_RESOLUTION.getWidth() * WEBCAM_RESOLUTION.getHeight();
-
-                // what percent of the view the april tag is taking
-                double viewPercentage = area / viewArea;
-
-                telemetry.addLine("View area percent: " + String.format(Locale.getDefault(), "%.2f", viewPercentage) + "%");
-            }
-        }
-
-        // Add "key" information to telemetry
-        telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
-        telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
-        telemetry.addLine("RBE = Range, Bearing & Elevation");
-    }
 
     protected void debugColorSensor() {
         PredominantColorProcessor.Result result = colorSensor.getAnalysis();
