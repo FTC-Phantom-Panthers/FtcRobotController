@@ -9,9 +9,25 @@ public enum ControlMappings {
     MOVEMENT_Y((g) -> g.left_stick_y),
     ROTATION((g) -> g.right_trigger - g.left_trigger),
     LAUNCHER_CHARGE((g) -> g.dpad_up ? 1f : 0f),
-    LAUNCHER_ANGLE_X((g) -> g.right_stick_x),
+    LAUNCHER_ELEVATOR((g) -> g.a ? 1f: 0f),
+    LAUNCHER_ANGLE_X((g) -> {
+        if (g.right_stick_x > 0)
+            return 0.5f;
+
+        if (g.right_stick_x < 0)
+            return -0.5f;
+
+        return 0;
+    }),
     LAUNCHER_ANGLE_Y((g) -> g.right_stick_y),
-    INTAKE((g) -> -g.right_stick_y),
+    INTAKE((g) -> {
+        if (g.right_bumper)
+            return 1f;
+        if (g.left_bumper)
+            return -1f;
+
+        return 0;
+    }),
     SORTER_SPIN_CYCLE_UP(Gamepad::rightBumperWasPressed),
     SORTER_SPIN_CYCLE_DOWN(Gamepad::leftBumperWasPressed),
     LAUNCHER_SPIN((g) -> {

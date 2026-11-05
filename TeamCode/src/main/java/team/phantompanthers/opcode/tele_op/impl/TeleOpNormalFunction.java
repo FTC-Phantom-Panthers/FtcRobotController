@@ -26,6 +26,10 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
 //
 //    private BallToFind ballToFind = BallToFind.NONE;
 
+    private long lastLoopTime = 0;
+
+    private double angleYCurrent = 1f;
+
     @Override
     public void runOpMode() {
         drive.init(hardwareMap);
@@ -41,12 +45,21 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
             drive.drive(x, y, rot);
 
             drive.setLauncherPower(ControlMappings.LAUNCHER_CHARGE.get(Float.class, gamepad1));
-            drive.rotateLauncherToAngle(
+            drive.setBallElevatorPower(ControlMappings.LAUNCHER_ELEVATOR.get(Float.class, gamepad1));
+            drive.setIntakePower(ControlMappings.INTAKE.get(Float.class, gamepad1));
+
+            angleYCurrent += ControlMappings.LAUNCHER_ANGLE_Y.get(Float.class, gamepad1) / 100f;
+            angleYCurrent = Math.min(Math.max(0.8f, angleYCurrent), 1);
+
+            double angle = drive.rotateLauncherToAngle(
                     ControlMappings.LAUNCHER_ANGLE_X.get(Float.class, gamepad1),
-                    ControlMappings.LAUNCHER_ANGLE_Y.get(Float.class, gamepad1)
+                    angleYCurrent,
+                    (System.nanoTime() - lastLoopTime) / 1_000_000.0
             );
 
             telemetry.addData("LAUNCHER ANGLE X", ControlMappings.LAUNCHER_ANGLE_X.get(Float.class, gamepad1));
+            telemetry.addData("LAUNCHER ANGLE X CURRENT", angle);
+            telemetry.addData("LAUNCHER ANGLE Y CURRENT", angleYCurrent);
 
 //            drive.intake(ControlMappings.INTAKE.get(Float.class, gamepad1));
 
@@ -118,6 +131,8 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
 //            hsvTelemetry();
 
             telemetry.update();
+
+            lastLoopTime = System.nanoTime();
 
             sleep(20);
         }

@@ -1,5 +1,6 @@
 package team.phantompanthers.hardware;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -10,9 +11,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class DriveTrain {
     public DcMotorEx lf, rf, lb, rb;
 
-    public Servo launcherAngleX;
+    public CRServo launcherAngleX;
+    private double launcherAngleXAngle = 0;
     public Servo launcherAngleY;
     public DcMotor launcherCharger;
+    public DcMotor ballElevator;
+
+    public DcMotor intake;
 
     public void init(HardwareMap hw) {
         lf = hw.get(DcMotorEx.class, "frontLeftMotor");
@@ -20,10 +25,13 @@ public class DriveTrain {
         lb = hw.get(DcMotorEx.class, "backLeftMotor");
         rb = hw.get(DcMotorEx.class, "backRightMotor");
 
-        launcherAngleX = hw.get(Servo.class, "launcherAngleX");
-
+        launcherAngleX = hw.get(CRServo.class, "launcherAngleX");
         launcherAngleY = hw.get(Servo.class, "launcherAngleY");
+
         launcherCharger = hw.get(DcMotor.class, "launcherCharger");
+        ballElevator = hw.get(DcMotor.class, "ballElevatorMotor");
+
+        intake = hw.get(DcMotor.class, "intakeMotor");
 
         // Initial directions so +Y and +X correlate correctly
         lf.setDirection(DcMotor.Direction.REVERSE);
@@ -34,6 +42,13 @@ public class DriveTrain {
         launcherCharger.setDirection(DcMotorSimple.Direction.FORWARD);
         launcherCharger.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         launcherCharger.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        ballElevator.setDirection(DcMotorSimple.Direction.FORWARD);
+        ballElevator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        ballElevator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        intake.setDirection(DcMotorSimple.Direction.REVERSE);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Brake when no input, run open-loop in TeleOp
         for (DcMotorEx m : new DcMotorEx[]{lf, rf, lb, rb}) {
@@ -42,13 +57,28 @@ public class DriveTrain {
         }
     }
 
+    public void setIntakePower(double power) {
+        intake.setPower(power);
+    }
+
+    public void setBallElevatorPower(double power) {
+        ballElevator.setPower(power);
+    }
+
     public void setLauncherPower(double power) {
         launcherCharger.setPower(power);
     }
 
-    public void rotateLauncherToAngle(double angleX, double angleY) {
-        launcherAngleX.setPosition(0.75f + angleX);
+    public double rotateLauncherToAngle(double angleX, double angleY, double deltaTimeMS) {
+        if ((launcherAngleXAngle < 830 && angleX > 0) || (launcherAngleXAngle > -460 && angleX < 0)) {
+            launcherAngleX.setPower(angleX);
+            launcherAngleXAngle += angleX * deltaTimeMS;
+        } else {
+            launcherAngleX.setPower(0);
+        }
         launcherAngleY.setPosition(angleY);
+
+        return launcherAngleXAngle;
     }
 
     public void drive(double x, double y, double rot) {
