@@ -13,6 +13,12 @@ import team.phantompanthers.opcode.auto_op.BaseAutoOpCode;
 public class AutoOpNormalFunction extends BaseAutoOpCode {
     private final DriveTrain drive = new DriveTrain();
 
+
+    public void reset(){
+
+   }
+
+
     @Override
     public void runOpMode() {
         drive.init(hardwareMap);
