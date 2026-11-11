@@ -83,10 +83,10 @@ public class DriveTrain {
 
     public void drive(double x, double y, double rot) {
         // Usual Mecanum mixing
-        double lfP = y + x + rot;
-        double rfP = y - x - rot;
-        double lbP = y - x + rot;
-        double rbP = y + x - rot;
+        double lfP = y - x - rot;
+        double rfP = y + x + rot;
+        double lbP = y + x - rot;
+        double rbP = y - x + rot;
 
         // Normalize it so no wheel can be greater than 1
         double max = Math.max(1.0, Math.max(Math.abs(lfP), Math.max(Math.abs(rfP), Math.max(Math.abs(lbP), Math.abs(rbP)))));

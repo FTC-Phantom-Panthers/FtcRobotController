@@ -12,10 +12,10 @@ public enum ControlMappings {
     LAUNCHER_ELEVATOR((g) -> g.a ? 1f: 0f),
     LAUNCHER_ANGLE_X((g) -> {
         if (g.right_stick_x > 0)
-            return 0.5f;
+            return 1f;
 
         if (g.right_stick_x < 0)
-            return -0.5f;
+            return -1f;
 
         return 0;
     }),
