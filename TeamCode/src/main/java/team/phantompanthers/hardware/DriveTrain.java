@@ -14,6 +14,7 @@ public class DriveTrain {
     public CRServo launcherAngleX;
     private double launcherAngleXAngle = 0;
     public Servo launcherAngleY;
+    public Servo flowerCrane;
     public DcMotor launcherCharger;
     public DcMotor ballElevator;
 
@@ -26,7 +27,9 @@ public class DriveTrain {
         rb = hw.get(DcMotorEx.class, "backRightMotor");
 
         launcherAngleX = hw.get(CRServo.class, "launcherAngleX");
+        launcherAngleX.setDirection(DcMotorSimple.Direction.REVERSE);
         launcherAngleY = hw.get(Servo.class, "launcherAngleY");
+        flowerCrane = hw.get(Servo.class, "flowerCrane");
 
         launcherCharger = hw.get(DcMotor.class, "launcherCharger");
         ballElevator = hw.get(DcMotor.class, "ballElevatorMotor");
@@ -70,7 +73,7 @@ public class DriveTrain {
     }
 
     public double rotateLauncherToAngle(double angleX, double angleY, double deltaTimeMS) {
-        if ((launcherAngleXAngle < 830 && angleX > 0) || (launcherAngleXAngle > -460 && angleX < 0)) {
+        if ((launcherAngleXAngle < 830 && angleX > 0) || (launcherAngleXAngle > -830 && angleX < 0)) {
             launcherAngleX.setPower(angleX);
             launcherAngleXAngle += angleX * deltaTimeMS;
         } else {
@@ -79,6 +82,10 @@ public class DriveTrain {
         launcherAngleY.setPosition(angleY);
 
         return launcherAngleXAngle;
+    }
+
+    public void setFlowerCraneAngle(double angle) {
+        flowerCrane.setPosition(angle);
     }
 
     public void drive(double x, double y, double rot) {

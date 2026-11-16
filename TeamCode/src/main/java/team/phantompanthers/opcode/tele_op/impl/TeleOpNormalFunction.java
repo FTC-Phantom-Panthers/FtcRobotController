@@ -1,8 +1,8 @@
 package team.phantompanthers.opcode.tele_op.impl;
 
-import android.graphics.Color;
-
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import team.phantompanthers.hardware.PowerScaler;
 import team.phantompanthers.opcode.tele_op.BaseTeleOpCode;
@@ -11,48 +11,56 @@ import team.phantompanthers.ControlMappings;
 
 @TeleOp(name = "Normal Function", group = "Linear Opmode")
 public class TeleOpNormalFunction extends BaseTeleOpCode {
-//    private static final int BALL_FIND_TIMEOUT_MS = 5000;
-//    private static final int BALL_FIND_CYCLE_TIMEOUT_MS = 500;
-//    private static final int KICK_STAY_TIME_MS = 1000;
-
     private final DriveTrain drive = new DriveTrain();
 
-//    private int sorterPosition = 0;
-//    private boolean kickToggle = false;
-//    private long kickStartTime = -1;
-//    private long findColorStartTime = -1;
-//
-//    private long findColorCycleTimeoutStartTime = -1;
-//
-//    private BallToFind ballToFind = BallToFind.NONE;
+    private static final RevHubOrientationOnRobot.LogoFacingDirection IMU_LOGO_DIRECTION =
+            RevHubOrientationOnRobot.LogoFacingDirection.UP;
+    private static final RevHubOrientationOnRobot.UsbFacingDirection IMU_USB_DIRECTION =
+            RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
+    private IMU imu;
 
     private long lastLoopTime = 0;
 
     private double angleYCurrent = 1f;
+    private float flowerCraneAngle = 0f;
 
     @Override
     public void runOpMode() {
         drive.init(hardwareMap);
         PowerScaler powerScaler = new PowerScaler(hardwareMap.voltageSensor.iterator().next());
 
-        //initVisionProcessors();
+        imu = hardwareMap.get(IMU.class, "imu");
+        if (!imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(
+                IMU_LOGO_DIRECTION, IMU_USB_DIRECTION)))) {
+            throw new IllegalStateException("Odometry IMU initialization failed");
+        }
+
         waitForStart();
+        if (isStopRequested()) return;
+
         while (opModeIsActive()) {
             double x = ControlMappings.MOVEMENT_X.getFloatCubic(gamepad1);
             double y = ControlMappings.MOVEMENT_Y.getFloatCubic(gamepad1);
-            double rot = ControlMappings.ROTATION.get(Float.class, gamepad1);
+            double rot = ControlMappings.ROTATION.getFloatCubic(gamepad1);
 
             drive.drive(x, y, rot);
 
-            drive.setLauncherPower(ControlMappings.LAUNCHER_CHARGE.get(Float.class, gamepad1));
-            drive.setBallElevatorPower(ControlMappings.LAUNCHER_ELEVATOR.get(Float.class, gamepad1));
-            drive.setIntakePower(ControlMappings.INTAKE.get(Float.class, gamepad1));
+            drive.setLauncherPower(ControlMappings.LAUNCHER_CHARGE.get(Float.class, gamepad2));
+            drive.setBallElevatorPower(ControlMappings.LAUNCHER_ELEVATOR.get(Float.class, gamepad2));
+            drive.setIntakePower(ControlMappings.INTAKE.get(Float.class, gamepad2));
 
-            angleYCurrent += ControlMappings.LAUNCHER_ANGLE_Y.get(Float.class, gamepad1) / 100f;
+
+            flowerCraneAngle += ControlMappings.FLOWER_CRANE.get(Float.class, gamepad2) / 100f;
+            flowerCraneAngle = Math.min(Math.max(flowerCraneAngle, 0f), 1f);
+
+//            drive.setFlowerCraneAngle(flowerCraneAngle);
+//            telemetry.addData("Flower Crane Current", flowerCraneAngle);
+
+            angleYCurrent += ControlMappings.LAUNCHER_ANGLE_Y.get(Float.class, gamepad2) / 100f;
             angleYCurrent = Math.min(Math.max(0.8f, angleYCurrent), 1);
 
             double angle = drive.rotateLauncherToAngle(
-                    ControlMappings.LAUNCHER_ANGLE_X.get(Float.class, gamepad1),
+                    ControlMappings.LAUNCHER_ANGLE_X.get(Float.class, gamepad2),
                     angleYCurrent,
                     (System.nanoTime() - lastLoopTime) / 1_000_000.0
             );
@@ -60,76 +68,6 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
             telemetry.addData("LAUNCHER ANGLE X", ControlMappings.LAUNCHER_ANGLE_X.get(Float.class, gamepad1));
             telemetry.addData("LAUNCHER ANGLE X CURRENT", angle);
             telemetry.addData("LAUNCHER ANGLE Y CURRENT", angleYCurrent);
-
-//            drive.intake(ControlMappings.INTAKE.get(Float.class, gamepad1));
-
-//            if (ControlMappings.SORTER_SPIN_CYCLE_UP.get(Boolean.class, gamepad1)) {
-//                sorterPosition++;
-//            }
-//
-//            if (ControlMappings.SORTER_SPIN_CYCLE_DOWN.get(Boolean.class, gamepad1)) {
-//                sorterPosition--;
-//            }
-
-
-//            drive.wheelRotateTo(sorterPosition);
-//
-//            drive.launcherSpin(ControlMappings.LAUNCHER_SPIN.get(Float.class, gamepad1));
-
-//            if (ControlMappings.LAUNCH.get(Boolean.class, gamepad1)) {
-//                kickToggle = !kickToggle;
-//                kickStartTime = System.currentTimeMillis();
-//            }
-//
-//            if (kickStartTime > -1 && System.currentTimeMillis() - kickStartTime > KICK_STAY_TIME_MS) {
-//                kickToggle = false;
-//                kickStartTime = -1;
-//            }
-//
-//            drive.launcherKick(kickToggle ? -1 : 0);
-//
-//            telemetry.addData("Sorter Position", sorterPosition);
-//            telemetry.addData("Sorter Real Position", drive.getWheelPosition());
-//
-//            if (ControlMappings.SPIN_TO_PURPLE.get(Boolean.class, gamepad1)) {
-//                ballToFind = BallToFind.PURPLE;
-//                findColorStartTime = System.currentTimeMillis();
-//            } else if (ControlMappings.SPIN_TO_GREEN.get(Boolean.class, gamepad1)) {
-//                ballToFind = BallToFind.GREEN;
-//                findColorStartTime = System.currentTimeMillis();
-//            }
-//
-//            if (ControlMappings.FIND_CANCEL.get(Boolean.class, gamepad1)) {
-//                ballToFind = BallToFind.NONE;
-//                findColorStartTime = -1;
-//            }
-//
-//            if (ballToFind != BallToFind.NONE && System.currentTimeMillis() - findColorStartTime > BALL_FIND_TIMEOUT_MS) {
-//                ballToFind = BallToFind.NONE;
-//                findColorStartTime = -1;
-//                telemetry.addLine("no " + ballToFind.name().toLowerCase() + " ball found");
-//            }
-
-//            if (ballToFind != BallToFind.NONE && !drive.isWheelBusy()) {
-//                if (findColorCycleTimeoutStartTime == -1)
-//                    findColorCycleTimeoutStartTime = System.currentTimeMillis();
-//
-//                if (System.currentTimeMillis() - findColorCycleTimeoutStartTime > BALL_FIND_CYCLE_TIMEOUT_MS) {
-//                    findColorCycleTimeoutStartTime = -1;
-//
-//                    float[] hsv = new float[3];
-//                    Color.colorToHSV(drive.colorSensor.argb(), hsv);
-//
-//                    if (ballToFind.isHueCorrect(hsv[0])) {
-//                        ballToFind = BallToFind.NONE;
-//                        findColorStartTime = -1;
-//                    } else {
-//                        sorterPosition++;
-//                    }
-//                }
-//            }
-//            hsvTelemetry();
-
             telemetry.update();
 
             lastLoopTime = System.nanoTime();
@@ -137,14 +75,5 @@ public class TeleOpNormalFunction extends BaseTeleOpCode {
             sleep(20);
         }
 
-        //visionPortal.close();
     }
-
-//    private void hsvTelemetry() {
-//        float[] hsv = new float[3];
-//        Color.colorToHSV(drive.colorSensor.argb(), hsv);
-//        telemetry.addData("Hue", hsv[0]);
-//        telemetry.addData("Saturation", hsv[1]);
-//        telemetry.addData("Brightness", hsv[2]);
-//    }
 }

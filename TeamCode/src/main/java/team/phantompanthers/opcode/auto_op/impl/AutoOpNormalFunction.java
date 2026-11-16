@@ -25,7 +25,7 @@ public class AutoOpNormalFunction extends BaseAutoOpCode {
 
         waitForStart();
 
-        drive.drive(0, 1, 0);
+        drive.drive(0, -1, 0);
         sleep(500L);
     }
 }
